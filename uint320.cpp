@@ -233,21 +233,43 @@ uint320 uint320::operator+(const uint320& add) const {
     
     uint320 sum = *this;
 
-#if(__x86_64 || __x86_64__ || __amd64 || __amd64__)
+#if(__x86_64 || __x86_64__ || __amd64 || __amd64__ || __aarch64__)
 #if(_MSC_VER || _PURE_CPP)
-    ulongint carry = 0, prev;
+    __uint128_t sum_uint128[UINT320LIMBS+1] = {0,0,0,0,0,0};
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
-        prev = sum.limbs[i];
-        sum.limbs[i] += add.limbs[i] + carry;
+        sum_uint128[i] += (__uint128_t)sum.limbs[i] + (__uint128_t)add.limbs[i];
+        
+        // carry high part
+        sum_uint128[i+1] += (sum_uint128[i] >> UINT64BITS);
 
-        if(sum.limbs[i]<prev || (carry && (limbs[i] == add.limbs[i]) && (add.limbs[i] == __UINT64_MAX__))) {
-            carry = 1;
-        }
-        else {
-            carry = 0;
-        }
+        // zero-out high part
+        sum_uint128[i] = (sum_uint128[i] << UINT64BITS) >> UINT64BITS;
     }
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        sum.limbs[i] = sum_uint128[i];
+    }
+#elif((__clang__ || __GNUC__ || __GNUG__ || __MINGW64__) && (__aarch64 || __aarch64__))
+#ifndef _HIDE_WARNING
+#warning using GCC inline asm, please enable optimization flag, recomended : -O2, to enable use C++ implementation instead, enable the -D_PURE_CPP flag.
+#endif
+    __uint128_t sum_uint128[UINT320LIMBS+1] = {0,0,0,0,0,0};
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        sum_uint128[i] += (__uint128_t)sum.limbs[i] + (__uint128_t)add.limbs[i];
+        
+        // carry high part
+        sum_uint128[i+1] += (sum_uint128[i] >> UINT64BITS);
+
+        // zero-out high part
+        sum_uint128[i] = (sum_uint128[i] << UINT64BITS) >> UINT64BITS;
+    }
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        sum.limbs[i] = sum_uint128[i];
+    }
+
 #elif(__clang__ || __GNUC__ || __GNUG__ || __MINGW64__)
 #ifndef _HIDE_WARNING
 #warning using GCC inline asm, please enable optimization flag, recomended : -O2, to enable use C++ implementation instead, enable the -D_PURE_CPP flag.
@@ -275,7 +297,7 @@ uint320 uint320::operator+(const uint320& add) const {
 #else
     #error uint320 is not supported on this compiler
 #endif
-#elif
+#else
 #error uint320 is not supported on 32-bit computers (x86 architectures)
 #endif
 
@@ -346,22 +368,63 @@ uint320 uint320::operator*(const uint320& mr) const {
     
     uint320 pd(0);
 
-#if(__x86_64 || __x86_64__ || __amd64 || __amd64__)
+#if(__x86_64 || __x86_64__ || __amd64 || __amd64__ || __aarch64__ || __aarch64)
 #if(_MSC_VER || _PURE_CPP)
-    ulongint carry = 0, prev;
+
+    __uint128_t __uint128_product[UINT320LIMBS+1] = {0,0,0,0,0,0};
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
-        prev = pd.limbs[i];
-        pd.limbs[i] += mr.limbs[i] + carry;
+        for(size_t j=0; j<UINT320LIMBS-i; ++j) {
+            
+            // index product
+            __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
 
-        if(pd.limbs[i]<prev || (carry && (limbs[i] == mr.limbs[i]) && (mr.limbs[i] == __UINT64_MAX__))) {
-            carry = 1;
-        }
-        else {
-            carry = 0;
+            // low part add
+            __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
+
+            // high part add
+            __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
+
+            // last carry
+            __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
+            __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
         }
     }
-#elif(__clang__ || __GNUC__ || __GNUG__ || __MINGW64__)
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        pd.limbs[i] = __uint128_product[i];
+    }
+    
+#elif ((__clang__ || __GNUC__ || __GNUG__ || __MINGW64__) && (__aarch64__ || __aarch64))
+#ifndef _HIDE_WARNING
+#warning using GCC inline asm, please enable optimization flag, recomended : -O2, to enable use C++ implementation instead, enable the -D_PURE_CPP flag.
+#endif
+
+    __uint128_t __uint128_product[UINT320LIMBS+1] = {0,0,0,0,0,0};
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        for(size_t j=0; j<UINT320LIMBS-i; ++j) {
+            
+            // index product
+            __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
+
+            // low part add
+            __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
+
+            // high part add
+            __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
+
+            // last carry
+            __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
+            __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
+        }
+    }
+
+    for(size_t i=0; i<UINT320LIMBS; ++i) {
+        pd.limbs[i] = __uint128_product[i];
+    }
+
+#elif (__clang__ || __GNUC__ || __GNUG__ || __MINGW64__)
 #ifndef _HIDE_WARNING
 #warning using GCC inline asm, please enable optimization flag, recomended : -O2, to enable use C++ implementation instead, enable the -D_PURE_CPP flag.
 #endif
@@ -469,11 +532,10 @@ uint320 uint320::operator*(const uint320& mr) const {
         [mc4]"m"(limbs[4])
         : "rax","rdx","cc"
     );
-
 #else
-    #error uint320 is not supported on this compiler
+#error uint320 is not supported on this compiler
 #endif
-#elif
+#else
 #error uint320 is not supported on 32-bit computers (x86 architectures)
 #endif
 
