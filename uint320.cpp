@@ -593,7 +593,7 @@ uint320 uint320::ss_mod(const uint320& divisor) const {
         pdvn.limbs[UINT320_LS_LIMB] |= bit.limbs[UINT320_LS_LIMB];
 
         if(pdvn>=divisor) {
-            pdvn -= divisor;
+            pdvn = pdvn - divisor;
             quotient.limbs[UINT320_LS_LIMB] |= 1;
         }
     }
