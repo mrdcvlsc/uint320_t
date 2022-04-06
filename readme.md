@@ -57,10 +57,10 @@ There are **TWO WAYS** to use the library, either using the **header only mode**
 
 - ## **Using header only**
 
-    Directly include the **Header-Mode-Chaha20-Poly1305.hpp** in your source code, and you can directly compile it without building the static library.
+    Directly include the **Header-Mode-uint320.hpp** in your source code, and you can directly compile it without building the static library.
 
     ```c++
-    #include "Header-Mode-Chaha20-Poly1305.hpp"
+    #include "Header-Mode-uint320.hpp"
     ```
 
     But you always need to enable the optimization flags for this method to work.
