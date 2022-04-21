@@ -411,18 +411,28 @@ uint320 uint320::operator*(const uint320& mr) const {
     for(size_t i=0; i<UINT320LIMBS; ++i) {
         for(size_t j=0; j<UINT320LIMBS-i; ++j) {
             
+            // old implementation (don't delete yet for future debugging reference)
             // index product
-            __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
+            // __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
 
             // low part add
-            __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
+            // __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
 
             // high part add
-            __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
+            // __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
 
             // last carry
-            __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
-            __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
+            // __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
+            // __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
+
+            // new implementation
+            __uint128_product[i+j] += (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
+            uint64_t carry = __uint128_product[i+j] >> 64;
+            
+            if(carry) {
+                __uint128_product[i+j] = (uint64_t) __uint128_product[i+j];
+                __uint128_product[i+j+1] += carry;
+            }
         }
     }
 
