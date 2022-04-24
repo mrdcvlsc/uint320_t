@@ -15,7 +15,7 @@ int main() {
     for(size_t i=0; i<TEST_CASES; ++i)
         Tests[i] = false;
 
-    ulongint max = 0xffffffffffffffff;
+    uint64_t max = 0xffffffffffffffff;
     uint320 ZERO(0), ONE(1), MAX(max,max,max,max,max);
     uint320 A(0,0,0,7879234,93);
     uint320 B(0,0,0,7879234,94);

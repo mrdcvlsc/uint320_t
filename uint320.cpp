@@ -13,12 +13,9 @@
 #include "uint320.hpp"
 #endif
 
-uint320::uint320() {
-    limbs = new ulongint[UINT320LIMBS];
-}
+uint320::uint320() {}
 
-uint320::uint320(ulongint num) {
-    limbs = new ulongint[UINT320LIMBS];
+uint320::uint320(uint64_t num) {
     limbs[0] = num;
     limbs[1] = 0UL;
     limbs[2] = 0UL;
@@ -27,14 +24,7 @@ uint320::uint320(ulongint num) {
 }
 
 uint320::uint320(const unsigned char *input_bytes, size_t bytes) {
-
-    limbs = new ulongint[UINT320LIMBS];
-
-    if(bytes>UINT320BYTES)
-        throw std::overflow_error("There should be only <= 64 bytes of data when initializing a uint320");
-
-    size_t byte_offset = UINT320BYTES - bytes;    
-
+    size_t byte_offset = UINT320BYTES - bytes;
     unsigned char *byte_form = (unsigned char*) limbs;
 
     memcpy(byte_form, input_bytes, bytes);
@@ -42,10 +32,8 @@ uint320::uint320(const unsigned char *input_bytes, size_t bytes) {
 }
 
 uint320::uint320(
-    ulongint n4, ulongint n3, ulongint n2, ulongint n1, ulongint n0
+    uint64_t n4, uint64_t n3, uint64_t n2, uint64_t n1, uint64_t n0
 ) {
-
-    limbs = new ulongint[UINT320LIMBS];
     limbs[0] = n0;
     limbs[1] = n1;
     limbs[2] = n2;
@@ -55,42 +43,16 @@ uint320::uint320(
 
 /// copy constructor
 uint320::uint320(const uint320& src) {
-
-    limbs = new ulongint[UINT320LIMBS];
     memcpy(limbs, src.limbs, UINT320BYTES);
-}
-
-/// move constructor
-uint320::uint320(uint320&& src) noexcept {
-
-    limbs = src.limbs;
-    src.limbs = NULL;
 }
 
 /// copy assignment
 uint320& uint320::operator=(const uint320& src) {
-
-    if(limbs == NULL)
-        limbs = new ulongint[UINT320LIMBS];
-
     memcpy(limbs, src.limbs, UINT320BYTES);
     return *this;
 }
 
-/// move assignment
-uint320& uint320::operator=(uint320&& src) {
-    if(limbs != NULL)
-        delete [] limbs;
-
-    limbs = src.limbs;
-    src.limbs = NULL;
-    return *this;
-}
-
-uint320::~uint320(){
-    if(limbs != NULL)
-        delete [] limbs;
-}
+uint320::~uint320() {}
 
 /// @return returns; 0 : if uint320 == 0, 1 : if uint320 == 1, and -1 : if uint320 != to 0 or 1.
 int uint320::one_or_zero() const {
@@ -323,7 +285,7 @@ uint320 uint320::operator-(const uint320& sub) const {
     
     uint320 dif = *this;
 
-    ulongint carry = 0, prev;
+    uint64_t carry = 0, prev;
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
         prev = dif.limbs[i];
@@ -366,25 +328,10 @@ uint320 uint320::operator*(const uint320& mr) const {
 #if(__x86_64 || __x86_64__ || __amd64 || __amd64__ || __aarch64__ || __aarch64)
 #if(_MSC_VER || _PURE_CPP)
 
-    #pragma message "Pure C++ Multiplication"
     __uint128_t __uint128_product[UINT320LIMBS+1] = {0,0,0,0,0,0};
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
         for(size_t j=0; j<UINT320LIMBS-i; ++j) {
-            
-            // old implementation (don't delete yet for future debugging reference)
-            // index product
-            // __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
-
-            // low part add
-            // __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
-
-            // high part add
-            // __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
-
-            // last carry
-            // __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
-            // __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
 
             // new implementation
             __uint128_product[i+j] += (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
@@ -410,20 +357,6 @@ uint320 uint320::operator*(const uint320& mr) const {
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
         for(size_t j=0; j<UINT320LIMBS-i; ++j) {
-            
-            // old implementation (don't delete yet for future debugging reference)
-            // index product
-            // __uint128_t prd = (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
-
-            // low part add
-            // __uint128_product[i+j] += ((prd << UINT64BITS) >> UINT64BITS);
-
-            // high part add
-            // __uint128_product[i+j+1] += (prd >> UINT64BITS); // high-carry
-
-            // last carry
-            // __uint128_product[i+j+1] += __uint128_product[i+j] >> UINT64BITS;
-            // __uint128_product[i+j]    = (__uint128_product[i+j] << 64) >> 64;
 
             // new implementation
             __uint128_product[i+j] += (__uint128_t)limbs[j] * (__uint128_t)mr.limbs[i];
@@ -593,24 +526,21 @@ uint320 uint320::ss_div(const uint320& divisor) const {
 /** long division using bits, shifts and subtract */
 uint320 uint320::ss_mod(const uint320& divisor) const {
     
-    uint320
-        quotient(0),
-        pdvn(0),
-        bit(0);
+    uint320 pdvn(0);
+
+    uint64_t bit = 0;
 
     for(size_t i=0; i<UINT320BITS; ++i) {
 
         pdvn = pdvn << 1;
-        quotient = quotient << 1;
 
-        bit = *this << i;
-        bit = bit >> UINT319BITS;
-
-        pdvn.limbs[UINT320_LS_LIMB] |= bit.limbs[UINT320_LS_LIMB];
+        bit = limbs[(UINT320LIMBS-1)-(i/64)] << i%64;
+        bit >>= 63;
+        
+        pdvn.limbs[UINT320_LS_LIMB] |= bit;
 
         if(pdvn>=divisor) {
-            pdvn = pdvn - divisor;
-            quotient.limbs[UINT320_LS_LIMB] |= 1;
+            pdvn -= divisor;
         }
     }
 
@@ -693,7 +623,7 @@ uint320 uint320::operator<<(size_t lshift) const {
 
     if(bit_shifts) {
         // compute carries.
-        ulongint carries[UINT320LIMBS-1];
+        uint64_t carries[UINT320LIMBS-1];
         for(size_t i=0; i<UINT320LIMBS-1; ++i) {
             carries[i] = result.limbs[i] >> (UINT64BITS-bit_shifts);
         }
@@ -739,7 +669,7 @@ uint320 uint320::operator>>(size_t rshift) const {
 
     if(bit_shifts) {
         // compute carries.
-        ulongint carries[UINT320LIMBS-1];
+        uint64_t carries[UINT320LIMBS-1];
         for(size_t i=0; i<UINT320LIMBS-1; ++i) {
             carries[i] = result.limbs[i+1] << (UINT64BITS-bit_shifts);
         }

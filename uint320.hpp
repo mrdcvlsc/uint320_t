@@ -44,10 +44,8 @@
 #define GREAT 1
 
 #if (__MINGW64__ || __MINGW64)
-typedef unsigned long long ulongint;
 #define PRINT_LIMBHEX "%016llx "
 #elif (__clang__ || __GNUC__ || __GNUG__)
-typedef unsigned long ulongint;
 #define PRINT_LIMBHEX "%016lx "
 #else
 #error not supported
@@ -59,26 +57,20 @@ class uint320 {
 
     /**least significant quadword starting from index 0
      * up to index 7 the most significant quadword.*/
-    ulongint *limbs;
+    uint64_t limbs[5];
 
     uint320();
-    uint320(ulongint num);
+    uint320(uint64_t num);
     uint320(const unsigned char *input_bytes, size_t bytes);
     uint320(
-        ulongint n4, ulongint n3, ulongint n2, ulongint n1, ulongint n0
+        uint64_t n4, uint64_t n3, uint64_t n2, uint64_t n1, uint64_t n0
     );
 
     /// copy constructor.
     uint320(const uint320& src);
 
-    /// move constructor.
-    uint320(uint320&& src) noexcept;
-
     /// copy assignment.
     uint320& operator=(const uint320& src);
-
-    /// move assignment.
-    uint320& operator=(uint320&& src);
 
     ~uint320();
 

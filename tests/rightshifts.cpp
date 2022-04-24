@@ -28,7 +28,7 @@ int main() {
     std::cout << TEST_NAME << "\n=================================\n";
 
     // TEST VARIABLES
-    ulongint max = 0xffffffffffffffff;
+    uint64_t max = 0xffffffffffffffff;
     uint320 MAX(max,max,max,max,max);
     uint320 ZERO(0,0,0,0,0);
     uint320 CRS032(0xffffffff,max,max,max,max);
