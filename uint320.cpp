@@ -5,10 +5,8 @@
 #include <bitset>
 
 #ifdef _MAKE_LIB
-#include "uint320_t.hpp"
-#endif
-
 #include "uint320.hpp"
+#endif
 
 namespace rushed {
     
