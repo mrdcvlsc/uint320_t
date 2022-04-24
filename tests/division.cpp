@@ -80,7 +80,6 @@ int main() {
     ASSERT_UINT512(MAXNUM2,CMAXNUM2,"MAX/NUM2");
     ASSERT_UINT512(MAXNUM2_MOD,CMAXNUM2_MOD,"MAX%NUM2");
 
-
     // SUMMARY OF RESULTS  
     size_t failed_cnt = 0; 
     for(auto e : TEST_RESULTS) {     

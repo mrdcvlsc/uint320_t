@@ -495,26 +495,27 @@ namespace rushed {
 
     /** long division using bits, shifts and subtract */
     uint320_t uint320_t::ss_div(const uint320_t& divisor) const {
-        
+
         uint320_t
             quotient(0),
             pdvn(0);
         
-        uint64_t bit = 0;
+        uint64_t bit = 0, one = 1, current_index, current_shitval;
 
         for(size_t i=0; i<UINT320BITS; ++i) {
 
-            pdvn = pdvn << 1;
-            quotient = quotient << 1;
+            current_index = UINT320_MS_LIMB-i/64, current_shitval = i%64;
 
-            bit = limbs[UINT320_MS_LIMB-i/64] << i%64;
+            pdvn = pdvn << 1;
+
+            bit = limbs[current_index] << current_shitval;
             bit >>= 63;
 
             pdvn.limbs[UINT320_LS_LIMB] |= bit;
 
             if(pdvn>=divisor) {
-                pdvn -= divisor;            
-                quotient.limbs[UINT320_LS_LIMB] |= 1;
+                pdvn -= divisor;
+                quotient.limbs[current_index] |= (one << (63-current_shitval));
             }
         }
 
