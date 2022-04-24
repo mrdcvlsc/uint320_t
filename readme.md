@@ -25,20 +25,22 @@ If your system does not have these requirements, it might produce wrong results 
 #include <iostream>
 #include "Header-Mode-uint320.hpp"
 
-uint320 fac(size_t n) {
-    uint320 factorial(1);
-    uint320 iter = factorial;
+using namespace rushed;
+
+uint320_t fac(size_t n) {
+    uint320_t factorial(1);
+    uint320_t iter = factorial;
 
     for(size_t i=1; i<=n; ++i) {
         factorial = factorial * iter;
-        iter.limbs[0]++;
+        iter++;
     }
 
     return factorial;
 }
 
 int main() {
-    uint320 factorial67 = fac(67);
+    uint320_t factorial67 = fac(67);
     factorial67.printHex();
 }
 ```

@@ -1,9 +1,11 @@
 #include <iostream>
 #include <uint320.hpp>
 
-uint320 fac(size_t n) {
-    uint320 factorial(1);
-    uint320 iter = factorial;
+using namespace rushed;
+
+uint320_t fac(size_t n) {
+    uint320_t factorial(1);
+    uint320_t iter = factorial;
 
     for(size_t i=1; i<=n; ++i) {
         factorial = factorial * iter;
@@ -14,10 +16,10 @@ uint320 fac(size_t n) {
 }
 
 int main() {
-    uint320 a(23218713);
-    uint320 b(0x073243, 0xa5b6c6d, 0xa00fffff, 0xaaffedb217, 0x88affcef);
+    uint320_t a(23218713);
+    uint320_t b(0x073243, 0xa5b6c6d, 0xa00fffff, 0xaaffedb217, 0x88affcef);
 
-    uint320
+    uint320_t
         add = a+b,
         sub = a-b,
         mul = a*b,
