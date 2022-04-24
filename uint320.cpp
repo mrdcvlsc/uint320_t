@@ -498,21 +498,22 @@ namespace rushed {
         
         uint320_t
             quotient(0),
-            pdvn(0),
-            bit(0);
+            pdvn(0);
+        
+        uint64_t bit = 0;
 
         for(size_t i=0; i<UINT320BITS; ++i) {
 
             pdvn = pdvn << 1;
             quotient = quotient << 1;
 
-            bit = *this << i;
-            bit = bit >> UINT319BITS;
+            bit = limbs[UINT320_MS_LIMB-i/64] << i%64;
+            bit >>= 63;
 
-            pdvn.limbs[UINT320_LS_LIMB] |= bit.limbs[UINT320_LS_LIMB];
+            pdvn.limbs[UINT320_LS_LIMB] |= bit;
 
             if(pdvn>=divisor) {
-                pdvn = pdvn - divisor;            
+                pdvn -= divisor;            
                 quotient.limbs[UINT320_LS_LIMB] |= 1;
             }
         }
