@@ -8,10 +8,12 @@
 #include <uint320.hpp>
 #endif
 
+using namespace rushed;
+
 std::vector<bool> TEST_RESULTS;
 const static std::string TEST_NAME = "Constructor";
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE);
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE);
 
 template<typename T>
 void ASSERT_ARRAY(T* A, T* B, size_t length, std::string TEST_MESSAGE, std::vector<bool>& RESULTS);
@@ -39,18 +41,18 @@ int main() {
     // printf("%0lx\n",ac.limbs[0]);
 
     // ANSWERS
-    uint320 a(s,16), b(r,16),
+    uint320_t a(s,16), b(r,16),
         ac(0, 0, 0, 0x1bf54941aff6bf4a, 0xfdb20dfb8a800301),
         bc(0, 0, 0, 0xa806d542fe52447f, 0x336d555778bed685);
 
-    uint320 aaa = a;
-    uint320 aaaaaaa = uint320(0, 0, 0, 0x1bf54941aff6bf4a, 0xfdb20dfb8a800301);
+    uint320_t aaa = a;
+    uint320_t aaaaaaa = uint320_t(0, 0, 0, 0x1bf54941aff6bf4a, 0xfdb20dfb8a800301);
 
     // TESTING ANSWER 
-    ASSERT_UINT512(a,ac,"uint320 constructor test 1");
-    ASSERT_UINT512(b,bc,"uint320 constructor test 2");
-    ASSERT_UINT512(aaa,a,"uint320 constructor test 3");
-    ASSERT_UINT512(aaaaaaa,a,"uint320 constructor test 4");
+    ASSERT_UINT512(a,ac,"uint320_t constructor test 1");
+    ASSERT_UINT512(b,bc,"uint320_t constructor test 2");
+    ASSERT_UINT512(aaa,a,"uint320_t constructor test 3");
+    ASSERT_UINT512(aaaaaaa,a,"uint320_t constructor test 4");
 
     // SUMMARY OF RESULTS
     
@@ -74,7 +76,7 @@ int main() {
 }
 
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE) {
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE) {
     std::cout << TEST_NAME << ":" << TEST_MESSAGE << " : ";
     if(A!=B) {
         std::cout << "FAILED\n";

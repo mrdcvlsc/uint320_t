@@ -8,10 +8,12 @@
 #include <uint320.hpp>
 #endif
 
-std::vector<bool> TEST_RESULTS;
-const static std::string TEST_NAME = "uint320 add "; 
+using namespace rushed;
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE);
+std::vector<bool> TEST_RESULTS;
+const static std::string TEST_NAME = "uint320_t add "; 
+
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE);
 
 template<typename T>
 void ASSERT_ARRAY(T* A, T* B, size_t length, std::string TEST_MESSAGE, std::vector<bool>& RESULTS);
@@ -23,9 +25,9 @@ void printBytes(unsigned char* bytearray, size_t len) {
     std::cout << "\n"; 
 }
 
-uint320 fib(size_t nth) {
-    uint320 base0(0,0,0,0,0), base1(0,0,0,0,1);
-    uint320 nthfib(0,0,0,0,0);
+uint320_t fib(size_t nth) {
+    uint320_t base0(0,0,0,0,0), base1(0,0,0,0,1);
+    uint320_t nthfib(0,0,0,0,0);
     for(size_t i=2; i<=nth; ++i) {
         nthfib = base0 + base1;
         base0 = base1;
@@ -41,12 +43,12 @@ int main() {
     // TEST VARIABLES
     uint64_t max = 0xffffffffffffffff;
 
-    uint320 MAX(max,max,max,max,max);
-    uint320 ZERO(0,0,0,0,0);
-    uint320 ONE(0,0,0,0,1);
-    uint320 TWO(0,0,0,0,2);
+    uint320_t MAX(max,max,max,max,max);
+    uint320_t ZERO(0,0,0,0,0);
+    uint320_t ONE(0,0,0,0,1);
+    uint320_t TWO(0,0,0,0,2);
 
-    uint320 NUM1(0x15453,0x00,0x253a56c05,0x19e87062bf,0x01),
+    uint320_t NUM1(0x15453,0x00,0x253a56c05,0x19e87062bf,0x01),
             NUM2(0,0x2282,0x6e,0x12fca,0xa),
             NUMC(0x15453, 0x0000000000002282, 0x0000000253a56c73, 0x00000019e8719289, 0x000000000000000b),
             
@@ -58,12 +60,12 @@ int main() {
         0x7af6ea1c8b65f068
     );
 
-    uint320 CMAXMAX(max,max,max,max,0xfffffffffffffffe),
+    uint320_t CMAXMAX(max,max,max,max,0xfffffffffffffffe),
 
     CFIB100(0,0,0,0x13, 0x33db76a7c594bfc3);
 
     // ANSWERS        
-    uint320 MAXONE = MAX + ONE, 
+    uint320_t MAXONE = MAX + ONE, 
             MAXTWO = MAX + TWO,
             MAXMAX = MAX + MAX,
             NUMA = NUM1 + NUM2,
@@ -101,7 +103,7 @@ int main() {
 }
 
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE) {
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE) {
     std::cout << TEST_NAME << ":" << TEST_MESSAGE << " : ";
     if(A!=B) {
         std::cout << "FAILED\n";

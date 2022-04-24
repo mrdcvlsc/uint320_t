@@ -7,6 +7,8 @@
 #include <uint320.hpp>
 #endif
 
+using namespace rushed;
+
 #define TEST_CASES 1
 
 int main() {
@@ -16,9 +18,9 @@ int main() {
         Tests[i] = false;
 
     uint64_t max = 0xffffffffffffffff;
-    uint320 ZERO(0), ONE(1), MAX(max,max,max,max,max);
-    uint320 A(0,0,0,7879234,93);
-    uint320 B(0,0,0,7879234,94);
+    uint320_t ZERO(0), ONE(1), MAX(max,max,max,max,max);
+    uint320_t A(0,0,0,7879234,93);
+    uint320_t B(0,0,0,7879234,94);
     
     if(
         !((ZERO == ZERO) && (ONE == ONE) && (A == A) && (MAX == MAX) &&
@@ -47,11 +49,11 @@ int main() {
     }
 
     if(!failed_cnt) {
-        std::cout << "uint320 comparision ALL test PASSED\n";
+        std::cout << "uint320_t comparision ALL test PASSED\n";
         return 0;
     }
     else {
-        std::cout << "uint320 comparision SOME test FAILED\n";
+        std::cout << "uint320_t comparision SOME test FAILED\n";
         return 1;
     }
 }

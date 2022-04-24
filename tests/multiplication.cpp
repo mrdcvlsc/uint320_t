@@ -8,10 +8,12 @@
 #include <uint320.hpp>
 #endif
 
-std::vector<bool> TEST_RESULTS;
-const static std::string TEST_NAME = "uint320 multiply "; 
+using namespace rushed;
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE);
+std::vector<bool> TEST_RESULTS;
+const static std::string TEST_NAME = "uint320_t multiply "; 
+
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE);
 
 template<typename T>
 void ASSERT_ARRAY(T* A, T* B, size_t length, std::string TEST_MESSAGE, std::vector<bool>& RESULTS);
@@ -23,9 +25,9 @@ void printBytes(unsigned char* bytearray, size_t len) {
     std::cout << "\n"; 
 }
  
-uint320 fac(size_t n) {
-    uint320 factorial(1);
-    uint320 iter = factorial;
+uint320_t fac(size_t n) {
+    uint320_t factorial(1);
+    uint320_t iter = factorial;
 
     for(size_t i=1; i<=n; ++i, iter++) {
         factorial = factorial * iter;
@@ -40,9 +42,9 @@ int main() {
 
     // TEST VARIABLES
     uint64_t max = 0xffffffffffffffff;        
-    uint320 MAX(max,max,max,max,max);
+    uint320_t MAX(max,max,max,max,max);
 
-    uint320
+    uint320_t
     
     CFAC67(0x45f0025cc534351, 0xd9eca1b12a7b1294, 0xa77c082c2962623d, 0xfe3152bcbff89f41, 0x0000000000000000),
 
@@ -63,7 +65,7 @@ int main() {
     CMAXMAX(1);
 
     // ANSWERS
-    uint320 FAC67 = fac(67),  
+    uint320_t FAC67 = fac(67),  
             MAXMAX = MAX * MAX,
             NUM1NUM2 = NUM1 * NUM2;
     
@@ -96,7 +98,7 @@ int main() {
 }
 
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE) {
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE) {
     std::cout << TEST_NAME << ":" << TEST_MESSAGE << " : ";
     if(A!=B) {
         std::cout << "FAILED\n";

@@ -8,10 +8,12 @@
 #include <uint320.hpp>
 #endif
 
-std::vector<bool> TEST_RESULTS;
-const static std::string TEST_NAME = "uint320 subtract "; 
+using namespace rushed;
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE);
+std::vector<bool> TEST_RESULTS;
+const static std::string TEST_NAME = "uint320_t subtract "; 
+
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE);
 
 template<typename T>
 void ASSERT_ARRAY(T* A, T* B, size_t length, std::string TEST_MESSAGE, std::vector<bool>& RESULTS);
@@ -31,13 +33,13 @@ int main() {
     uint64_t max = 0xffffffffffffffff;
 
 
-    uint320 MAX(max,max,max,max,max);
-    uint320 ZERO(0,0,0,0,0);
-    uint320 ONE(0,0,0,0,1);
-    uint320 TWO(0,0,0,0,2);
-    uint320 THREE(0,0,0,0,3);
+    uint320_t MAX(max,max,max,max,max);
+    uint320_t ZERO(0,0,0,0,0);
+    uint320_t ONE(0,0,0,0,1);
+    uint320_t TWO(0,0,0,0,2);
+    uint320_t THREE(0,0,0,0,3);
 
-    uint320 NUM1(997816278132,678823674,87123,0,1),
+    uint320_t NUM1(997816278132,678823674,87123,0,1),
             NUM2(0,8834,110,77770,10),
             CMAXZERO = MAX,
             CMAXMAX = ZERO,
@@ -49,7 +51,7 @@ int main() {
             );
 
     // ANSWERS           
-    uint320 MAXZERO = MAX - ZERO,
+    uint320_t MAXZERO = MAX - ZERO,
             MAXONE = MAX - ONE,
             MAXTWO = MAX - TWO,
             MAXMAX = MAX - MAX,
@@ -94,7 +96,7 @@ int main() {
 }
 
 
-void ASSERT_UINT512(const uint320& A, const uint320& B, const std::string& TEST_MESSAGE) {
+void ASSERT_UINT512(const uint320_t& A, const uint320_t& B, const std::string& TEST_MESSAGE) {
     std::cout << TEST_NAME << ":" << TEST_MESSAGE << " : ";
     if(A!=B) {
         std::cout << "FAILED\n";
