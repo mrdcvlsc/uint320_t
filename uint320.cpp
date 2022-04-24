@@ -75,12 +75,12 @@ int uint320::compare(const uint320& with) const {
 
     for(size_t i=0; i<UINT320LIMBS; ++i) {
 
-        if(limbs[UINT320LIMBS-1-i]<with.limbs[UINT320LIMBS-1-i]) {
+        if(limbs[UINT320_MS_LIMB-i]<with.limbs[UINT320_MS_LIMB-i]) {
             value = -1;
             break;
         }
 
-        if(limbs[UINT320LIMBS-1-i]>with.limbs[UINT320LIMBS-1-i]) {
+        if(limbs[UINT320_MS_LIMB-i]>with.limbs[UINT320_MS_LIMB-i]) {
             value = 1;
             break;
         }
@@ -534,7 +534,7 @@ uint320 uint320::ss_mod(const uint320& divisor) const {
 
         pdvn = pdvn << 1;
 
-        bit = limbs[(UINT320LIMBS-1)-(i/64)] << i%64;
+        bit = limbs[UINT320_MS_LIMB-i/64] << i%64;
         bit >>= 63;
         
         pdvn.limbs[UINT320_LS_LIMB] |= bit;
@@ -623,8 +623,8 @@ uint320 uint320::operator<<(size_t lshift) const {
 
     if(bit_shifts) {
         // compute carries.
-        uint64_t carries[UINT320LIMBS-1];
-        for(size_t i=0; i<UINT320LIMBS-1; ++i) {
+        uint64_t carries[UINT320_MS_LIMB];
+        for(size_t i=0; i<UINT320_MS_LIMB; ++i) {
             carries[i] = result.limbs[i] >> (UINT64BITS-bit_shifts);
         }
 
@@ -669,8 +669,8 @@ uint320 uint320::operator>>(size_t rshift) const {
 
     if(bit_shifts) {
         // compute carries.
-        uint64_t carries[UINT320LIMBS-1];
-        for(size_t i=0; i<UINT320LIMBS-1; ++i) {
+        uint64_t carries[UINT320_MS_LIMB];
+        for(size_t i=0; i<UINT320_MS_LIMB; ++i) {
             carries[i] = result.limbs[i+1] << (UINT64BITS-bit_shifts);
         }
 
@@ -678,7 +678,7 @@ uint320 uint320::operator>>(size_t rshift) const {
         result.limbs[UINT320_MS_LIMB] >>= bit_shifts;
 
         // apply shifts and the carry over to the procceding indecies.
-        for(size_t i=0; i<UINT320LIMBS-1; ++i) {
+        for(size_t i=0; i<UINT320_MS_LIMB; ++i) {
             result.limbs[i] >>= bit_shifts;
             result.limbs[i] |= carries[i];
         }
@@ -695,14 +695,14 @@ uint320& uint320::operator>>=(size_t rshift) {
 void uint320::printHex() const {
     std::cout << "0x";
     for(size_t i=0; i<UINT320LIMBS; ++i)
-        printf(PRINT_LIMBHEX,limbs[UINT320LIMBS-1-i]);
+        printf(PRINT_LIMBHEX,limbs[UINT320_MS_LIMB-i]);
     std::cout << "\n";
 }
 
 /// the limb[7] will be printed first then 6,5, ..., the limb[0] will be printed last.
 void uint320::printBits() const {
     for(size_t i=0; i<UINT320LIMBS; ++i) {
-        std::cout << std::bitset<UINT64BITS>(limbs[UINT320LIMBS-1-i]) ;
+        std::cout << std::bitset<UINT64BITS>(limbs[UINT320_MS_LIMB-i]) ;
     }
     std::cout << "\n";
 }
