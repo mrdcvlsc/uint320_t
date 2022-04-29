@@ -522,6 +522,54 @@ namespace rushed {
         return quotient;
     }
 
+    std::pair<uint320_t,uint320_t> uint320_t::ss_divmod(const uint320_t& divisor) const {
+        uint320_t
+            quotient(0),
+            pdvn(0);
+        
+        uint64_t bit = 0, one = 1, current_index, current_shitval;
+
+        for(size_t i=0; i<UINT320BITS; ++i) {
+
+            current_index = UINT320_MS_LIMB-i/64, current_shitval = i%64;
+
+            pdvn = pdvn << 1;
+
+            bit = limbs[current_index] << current_shitval;
+            bit >>= 63;
+
+            pdvn.limbs[UINT320_LS_LIMB] |= bit;
+
+            if(pdvn>=divisor) {
+                pdvn -= divisor;
+                quotient.limbs[current_index] |= (one << (63-current_shitval));
+            }
+        }
+
+        return {quotient,pdvn};
+    }
+
+    std::pair<uint320_t,uint320_t> uint320_t::divwrem(const uint320_t& divisor) const {
+        int value = divisor.one_or_zero();
+        if(value == 0) {
+            std::cout << "\nError!!!\nuint320_t operands:\n";
+            std::cout << "Dividen = "; printHex();
+            std::cout << "Divisor = "; divisor.printHex();
+            throw std::domain_error("division by zero is not possible");
+        }
+        else if(*this == divisor) {
+            return {uint320_t(1),uint320_t(0)}; // remainder zero
+        }
+        else if(*this < divisor) {
+            return {uint320_t(0),*this}; // remainder *this (dividen)
+        }
+        else if(value == 1) {
+            return {*this,uint320_t(0)};
+        }
+        return this->ss_divmod(divisor);
+    }
+
+
     /** long division using bits, shifts and subtract */
     uint320_t uint320_t::ss_mod(const uint320_t& divisor) const {
         
@@ -705,6 +753,30 @@ namespace rushed {
         }
         std::cout << "\n";
     }
+
+    std::string uint320_t::toBase10String() const {
+        std::string Base10 = "";
+        uint320_t This = *this;
+        uint320_t ten(10);
+        std::pair<uint320_t,uint320_t> divmod = This.divwrem(ten);
+        Base10.push_back('0'+divmod.second.limbs[0]);
+        while(divmod.first.boolean()) {
+            divmod = This.divwrem(ten);
+            Base10.push_back('0'+divmod.second.limbs[0]);
+            This = divmod.first;
+        }
+
+        std::reverse(Base10.begin(),Base10.end());
+        Base10.pop_back();
+        return Base10;
+    }
+
+    void uint320_t::printBase10() const {
+        std::cout << toBase10String() << "\n";
+    }
 }
 
 #endif
+
+// 364711109181886852882498590966054644271676353140495245937016285002679624369438720000000000000000
+// 36471110918188685288249859096605464427167635314049524593701628500267962436943872000000000000000

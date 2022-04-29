@@ -6,6 +6,7 @@
 #include <cmath>
 #include <bitset>
 #include <utility>
+#include <algorithm>
 
 namespace rushed {
     //============================== uint320_t ==============================
@@ -123,6 +124,9 @@ namespace rushed {
 
         /** long division using bits, shifts and subtract. */
         uint320_t ss_mod(const uint320_t& divisor) const;
+        
+        std::pair<uint320_t,uint320_t> ss_divmod(const uint320_t& divisor) const;
+        std::pair<uint320_t,uint320_t> divwrem(const uint320_t& divisor) const;
 
         uint320_t operator/(const uint320_t& divisor) const;
         uint320_t& operator/=(const uint320_t& divisor);
@@ -145,6 +149,10 @@ namespace rushed {
 
         /// the limb[7] will be printed first then 6,5, ..., the limb[0] will be printed last.
         void printBits() const;
+
+        void printBase10() const;
+
+        std::string toBase10String() const;
     };
 }
 

@@ -24,6 +24,7 @@ header_test: $(OBJ)
 	@./$(SRC)/subtraction.out
 	@./$(SRC)/multiplication.out
 	@./$(SRC)/division.out
+	@./$(SRC)/base10-output.out
 
 # -------------------------- test program compilation ---------------------------
 
