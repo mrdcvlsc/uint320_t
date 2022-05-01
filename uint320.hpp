@@ -124,9 +124,6 @@ namespace rushed {
 
         /** long division using bits, shifts and subtract. */
         uint320_t ss_mod(const uint320_t& divisor) const;
-        
-        std::pair<uint320_t,uint320_t> ss_divmod(const uint320_t& divisor) const;
-        std::pair<uint320_t,uint320_t> divwrem(const uint320_t& divisor) const;
 
         uint320_t operator/(const uint320_t& divisor) const;
         uint320_t& operator/=(const uint320_t& divisor);
