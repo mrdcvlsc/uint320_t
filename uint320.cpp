@@ -755,19 +755,21 @@ namespace rushed {
     }
 
     std::string uint320_t::toBase10String() const {
-        std::string Base10 = "";
-        uint320_t This = *this;
-        uint320_t ten(10);
-        std::pair<uint320_t,uint320_t> divmod = This.divwrem(ten);
-        Base10.push_back('0'+divmod.second.limbs[0]);
-        while(divmod.first.boolean()) {
-            divmod = This.divwrem(ten);
-            Base10.push_back('0'+divmod.second.limbs[0]);
-            This = divmod.first;
-        }
 
-        std::reverse(Base10.begin(),Base10.end());
-        Base10.pop_back();
+        std::string Base10 = "";
+        uint320_t ten(10), quotient = *this;
+
+        if(quotient.boolean()) {
+            while(quotient.boolean()) {
+                uint320_t remainder = quotient % ten;
+                quotient = quotient / ten;
+                Base10.push_back('0'+remainder.limbs[0]);
+            }
+
+            std::reverse(Base10.begin(),Base10.end());    
+        }
+        else Base10 = "0";
+        
         return Base10;
     }
 

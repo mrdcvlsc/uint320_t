@@ -1,5 +1,5 @@
 CC := g++
-TESTFLAGS := -g -Og -D_HIDE_WARNING -D_PURE_CPP
+TESTFLAGS := -g -Og -D_HIDE_WARNING
 CXXFLAGS := -std=c++11 -Wall -Wextra
 
 OS := $(shell uname)
