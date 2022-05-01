@@ -705,6 +705,29 @@ namespace rushed {
         }
         std::cout << "\n";
     }
+
+    std::string uint320_t::toBase10String() const {
+
+        std::string Base10 = "";
+        uint320_t ten(10), quotient = *this;
+
+        if(quotient.boolean()) {
+            while(quotient.boolean()) {
+                uint320_t remainder = quotient % ten;
+                quotient = quotient / ten;
+                Base10.push_back('0'+remainder.limbs[0]);
+            }
+
+            std::reverse(Base10.begin(),Base10.end());    
+        }
+        else Base10 = "0";
+        
+        return Base10;
+    }
+
+    void uint320_t::printBase10() const {
+        std::cout << toBase10String() << "\n";
+    }
 }
 
 #endif

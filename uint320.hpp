@@ -6,6 +6,7 @@
 #include <cmath>
 #include <bitset>
 #include <utility>
+#include <algorithm>
 
 namespace rushed {
     //============================== uint320_t ==============================
@@ -145,6 +146,10 @@ namespace rushed {
 
         /// the limb[7] will be printed first then 6,5, ..., the limb[0] will be printed last.
         void printBits() const;
+
+        void printBase10() const;
+
+        std::string toBase10String() const;
     };
 }
 

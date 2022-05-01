@@ -38,7 +38,10 @@ int main() {
             boolnot = !a;
 
     std::cout << "Factorial of 67 :\n";
-    fac(67).printHex();
+    uint320_t fac67 = fac(67);
     
+    fac67.printHex();
+    fac67.printBase10();
+
     return 0;
 }

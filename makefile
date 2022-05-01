@@ -1,5 +1,5 @@
 CC := g++
-TESTFLAGS := -g -Og -D_HIDE_WARNING -D_PURE_CPP
+TESTFLAGS := -g -Og -D_HIDE_WARNING
 CXXFLAGS := -std=c++11 -Wall -Wextra
 
 OS := $(shell uname)
@@ -24,6 +24,7 @@ header_test: $(OBJ)
 	@./$(SRC)/subtraction.out
 	@./$(SRC)/multiplication.out
 	@./$(SRC)/division.out
+	@./$(SRC)/base10-output.out
 
 # -------------------------- test program compilation ---------------------------
 
