@@ -45,7 +45,9 @@ namespace rushed {
 
     /// copy assignment
     uint320_t& uint320_t::operator=(const uint320_t& src) {
-        memcpy(limbs, src.limbs, UINT320BYTES);
+        if(this!=&src) {
+            memcpy(limbs, src.limbs, UINT320BYTES);
+        }
         return *this;
     }
 
@@ -69,19 +71,21 @@ namespace rushed {
     int uint320_t::compare(const uint320_t& with) const {
 
         int value = 0;
+        if(this!=&with) {
+            for(size_t i=0; i<UINT320LIMBS; ++i) {
 
-        for(size_t i=0; i<UINT320LIMBS; ++i) {
+                if(limbs[UINT320_MS_LIMB-i]<with.limbs[UINT320_MS_LIMB-i]) {
+                    value = -1;
+                    break;
+                }
 
-            if(limbs[UINT320_MS_LIMB-i]<with.limbs[UINT320_MS_LIMB-i]) {
-                value = -1;
-                break;
-            }
-
-            if(limbs[UINT320_MS_LIMB-i]>with.limbs[UINT320_MS_LIMB-i]) {
-                value = 1;
-                break;
+                if(limbs[UINT320_MS_LIMB-i]>with.limbs[UINT320_MS_LIMB-i]) {
+                    value = 1;
+                    break;
+                }
             }
         }
+        
         return value;
     }
 
